@@ -1,0 +1,33 @@
+# Python virtual environment
+venv/
+
+# Data files
+*.csv
+data/datanode/
+data/namenode/
+data/cassandra/
+
+# Logs
+*.log
+kafka_producer.log
+
+# Environment files
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# DBT
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+
+# System files
+.DS_Store
