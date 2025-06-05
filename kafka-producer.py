@@ -22,7 +22,7 @@ fake = Faker()
 
 # Initialize KafkaProducer with retry configuration
 producer = KafkaProducer(
-    bootstrap_servers='localhost:9092',  # Using localhost since we're port forwarding
+    bootstrap_servers='localhost:29092',  # Using the external port for local access
     value_serializer=lambda v: json.dumps(v).encode('utf-8'),
     retries=5,  # Number of retries if the connection fails
     retry_backoff_ms=1000,  # Time between retries in milliseconds
@@ -66,10 +66,10 @@ topics = {
 
 if __name__ == "__main__":
     logger.info("Starting Kafka producer...")
-    csv_files = {topic: open(f"{topic}.csv", "a", newline="") for topic in topics}
+    csv_files = {topic: open(f"data/{topic}.csv", "a", newline="") for topic in topics}
     csv_writers = {}
     for topic, generator in topics.items():
-        if os.stat(f"{topic}.csv").st_size == 0:
+        if os.stat(f"data/{topic}.csv").st_size == 0:
             sample = generator()
             writer = csv.DictWriter(csv_files[topic], fieldnames=sample.keys())
             writer.writeheader()
