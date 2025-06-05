@@ -19,7 +19,7 @@ session = cluster.connect(KEYSPACE)
 parse_time = lambda t: datetime.fromisoformat(t) if t else None
 
 # Insert clickstream data
-with open('clickstream.csv', newline='') as f:
+with open('./data/clickstream.csv', newline='') as f:
     reader = csv.DictReader(f)
     for row in reader:
         session.execute(
@@ -38,7 +38,7 @@ with open('clickstream.csv', newline='') as f:
         )
 
 # Insert purchases data
-with open('purchases.csv', newline='') as f:
+with open('./data/purchases.csv', newline='') as f:
     reader = csv.DictReader(f)
     for row in reader:
         session.execute(
@@ -57,7 +57,7 @@ with open('purchases.csv', newline='') as f:
         )
 
 # Insert customers data
-with open('customers.csv', newline='') as f:
+with open('./data/customers.csv', newline='') as f:
     reader = csv.DictReader(f)
     for row in reader:
         session.execute(
@@ -74,6 +74,27 @@ with open('customers.csv', newline='') as f:
             )
         )
 
+## Print the first few rows of each table to verify data import
+def print_tables_data():
+    print("Clickstream Data:")
+    rows = session.execute("SELECT * FROM clickstream LIMIT 3")
+    for row in rows:
+        print(row)
+
+    print("\nPurchases Data:")
+    rows = session.execute("SELECT * FROM purchases LIMIT 3")
+    for row in rows:
+        print(row)
+
+    print("\nCustomers Data:")
+    rows = session.execute("SELECT * FROM customers LIMIT 3")
+    for row in rows:
+        print(row)
+
 print('CSV data imported into Cassandra.')
+
+
+print_tables_data()
+
 session.shutdown()
 cluster.shutdown()
