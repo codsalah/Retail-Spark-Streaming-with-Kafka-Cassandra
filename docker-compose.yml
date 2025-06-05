@@ -31,10 +31,13 @@ services:
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      HADOOP_NAMENODE_HOST: namenode
+      HADOOP_NAMENODE_PORT: 8020
     volumes:
       - ./dags:/opt/airflow/dags
       - ./dbt:/opt/airflow/dbt
       - ./airflow_cfg:/opt/airflow/config
+      - ./data:/opt/airflow/data
     ports:
       - "8081:8080"
     command: webserver
@@ -46,13 +49,18 @@ services:
     image: airflow-dbt
     depends_on:
       - postgres
+      - namenode
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      AIRFLOW__WEBSERVER__SECRET_KEY: 'my-secret-key'
+      HADOOP_NAMENODE_HOST: namenode
+      HADOOP_NAMENODE_PORT: 8020
     volumes:
       - ./dags:/opt/airflow/dags
       - ./dbt:/opt/airflow/dbt
       - ./airflow_cfg:/opt/airflow/config
+      - ./data:/opt/airflow/data
     command: scheduler
     networks:
       - net
@@ -83,9 +91,10 @@ services:
     hostname: zookeeper
     container_name: zookeeper-iot
     ports:
-      - "2182:2182"
+      - "2181:2181"
     environment:
-      ZOOKEEPER_CLIENT_PORT: 2182
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     networks:
       - net
 
