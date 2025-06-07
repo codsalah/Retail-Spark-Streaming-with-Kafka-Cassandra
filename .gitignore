@@ -5,7 +5,6 @@ venv/
 *.csv
 data/datanode/
 data/namenode/
-data/cassandra/
 
 # Logs
 *.log
