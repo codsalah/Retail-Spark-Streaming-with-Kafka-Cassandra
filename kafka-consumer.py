@@ -1,8 +1,9 @@
 import subprocess
 
+# Define Kafka consumer command (subscribing to all topics)
 command = ["docker", "exec", "kafka-iot", "kafka-console-consumer",
            "--bootstrap-server", "localhost:9092",
-           "--topic", "clickstream",
+           "--topic", "clickstream,purchases,customers",
            "--from-beginning"]
 
 try:
