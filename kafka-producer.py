@@ -66,6 +66,7 @@ topics = {
 
 if __name__ == "__main__":
     logger.info("Starting Kafka producer...")
+    # Initialize CSV files and writers if they don't exist or are empty
     csv_files = {topic: open(f"data/{topic}.csv", "a", newline="") for topic in topics}
     csv_writers = {}
     for topic, generator in topics.items():
@@ -78,6 +79,7 @@ if __name__ == "__main__":
             sample = generator()
             writer = csv.DictWriter(csv_files[topic], fieldnames=sample.keys())
             csv_writers[topic] = writer
+    # Ensure the data directory exists and is writable, create it if necessary
     try:
         while True:  # Continuous streaming
             for topic, generator in topics.items():
