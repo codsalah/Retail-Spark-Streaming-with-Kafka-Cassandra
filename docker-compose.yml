@@ -159,6 +159,7 @@ services:
       - SPARK_DRIVER_HOST=spark-master
     volumes:
       - ./data/spark:/opt/spark-data
+      - ./:/workspace
     networks:
       - net
 
