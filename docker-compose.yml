@@ -33,14 +33,21 @@ services:
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
       HADOOP_NAMENODE_HOST: namenode
       HADOOP_NAMENODE_PORT: 8020
+      DBT_PROFILES_DIR: /opt/airflow/dbt
+      DBT_PROJECT_DIR: /opt/airflow/dbt
     volumes:
       - ./dags:/opt/airflow/dags
       - ./dbt:/opt/airflow/dbt
+      - ./scripts:/opt/airflow/scripts
       - ./airflow_cfg:/opt/airflow/config
       - ./data:/opt/airflow/data
     ports:
       - "8081:8080"
-    command: webserver
+    command: >
+      bash -c "
+        /opt/airflow/scripts/init_dbt.sh &&
+        airflow webserver
+      "
     networks:
       - net
 
@@ -56,12 +63,19 @@ services:
       AIRFLOW__WEBSERVER__SECRET_KEY: 'my-secret-key'
       HADOOP_NAMENODE_HOST: namenode
       HADOOP_NAMENODE_PORT: 8020
+      DBT_PROFILES_DIR: /opt/airflow/dbt
+      DBT_PROJECT_DIR: /opt/airflow/dbt
     volumes:
       - ./dags:/opt/airflow/dags
       - ./dbt:/opt/airflow/dbt
+      - ./scripts:/opt/airflow/scripts
       - ./airflow_cfg:/opt/airflow/config
       - ./data:/opt/airflow/data
-    command: scheduler
+    command: >
+      bash -c "
+        /opt/airflow/scripts/init_dbt.sh &&
+        airflow scheduler
+      "
     networks:
       - net
 
@@ -73,14 +87,18 @@ services:
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
+      DBT_PROFILES_DIR: /opt/airflow/dbt
+      DBT_PROJECT_DIR: /opt/airflow/dbt
     entrypoint: >
       bash -c "
+        /opt/airflow/scripts/init_dbt.sh &&
         airflow db upgrade &&
         airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com
       "
     volumes:
       - ./dags:/opt/airflow/dags
       - ./dbt:/opt/airflow/dbt
+      - ./scripts:/opt/airflow/scripts
       - ./airflow_cfg:/opt/airflow/config
     networks:
       - net
