@@ -1,0 +1,97 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Customer dimension table with purchase metrics and segmentation"
+    columns:
+      - name: customer_id
+        description: "Unique identifier for customers"
+        tests:
+          - unique
+          - not_null
+      - name: name
+        description: "Customer full name"
+      - name: email
+        description: "Customer email address"
+      - name: email_domain
+        description: "Domain extracted from email"
+      - name: country
+        description: "Customer country"
+      - name: signup_date
+        description: "Date when customer signed up"
+      - name: total_orders
+        description: "Total number of orders placed by customer"
+      - name: total_spent
+        description: "Total amount spent by customer"
+      - name: avg_order_value
+        description: "Average order value for customer"
+      - name: first_purchase_date
+        description: "Date of first purchase"
+      - name: last_purchase_date
+        description: "Date of most recent purchase"
+      - name: customer_segment
+        description: "Customer segmentation based on purchase behavior"
+      - name: loaded_at
+        description: "Timestamp when record was loaded"
+
+  - name: fct_purchases
+    description: "Purchase fact table with customer details"
+    columns:
+      - name: order_id
+        description: "Unique identifier for orders"
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Customer who made the purchase"
+        tests:
+          - not_null
+      - name: product_id
+        description: "Product purchased"
+      - name: purchase_timestamp
+        description: "When the purchase was made"
+      - name: purchase_date
+        description: "Date of purchase"
+      - name: quantity
+        description: "Quantity purchased"
+      - name: unit_price
+        description: "Price per unit"
+      - name: total_amount
+        description: "Total amount for this purchase"
+      - name: name
+        description: "Customer name"
+      - name: email
+        description: "Customer email"
+      - name: country
+        description: "Customer country"
+      - name: customer_segment
+        description: "Customer segment"
+      - name: loaded_at
+        description: "Timestamp when record was loaded"
+
+  - name: daily_sales_summary
+    description: "Daily aggregated sales metrics and KPIs"
+    columns:
+      - name: purchase_date
+        description: "Date of sales"
+        tests:
+          - unique
+          - not_null
+      - name: total_orders
+        description: "Total number of orders for the day"
+      - name: unique_customers
+        description: "Number of unique customers who purchased"
+      - name: unique_products
+        description: "Number of unique products sold"
+      - name: total_quantity
+        description: "Total quantity of items sold"
+      - name: total_revenue
+        description: "Total revenue for the day"
+      - name: avg_order_value
+        description: "Average order value for the day"
+      - name: new_customers
+        description: "Number of new customers"
+      - name: returning_customers
+        description: "Number of returning customers"
+      - name: loaded_at
+        description: "Timestamp when record was loaded"
