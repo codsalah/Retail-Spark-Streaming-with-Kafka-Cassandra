@@ -1,0 +1,70 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Staging table for customer data from silver layer"
+    columns:
+      - name: customer_id
+        description: "Unique identifier for customers"
+        tests:
+          - unique
+          - not_null
+      - name: name
+        description: "Customer full name"
+      - name: email
+        description: "Customer email address"
+      - name: email_clean
+        description: "Lowercase cleaned email address"
+      - name: email_domain
+        description: "Domain extracted from email"
+      - name: country
+        description: "Customer country"
+      - name: signup_date
+        description: "Date when customer signed up"
+      - name: loaded_at
+        description: "Timestamp when record was loaded"
+
+  - name: stg_purchases
+    description: "Staging table for purchase transactions from silver layer"
+    columns:
+      - name: order_id
+        description: "Unique identifier for orders"
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Customer who made the purchase"
+        tests:
+          - not_null
+      - name: product_id
+        description: "Product purchased"
+      - name: purchase_timestamp
+        description: "When the purchase was made"
+      - name: purchase_date
+        description: "Date of purchase"
+      - name: quantity
+        description: "Quantity purchased"
+      - name: unit_price
+        description: "Price per unit"
+      - name: total_amount
+        description: "Total amount for this purchase"
+      - name: loaded_at
+        description: "Timestamp when record was loaded"
+
+  - name: stg_clickstream
+    description: "Staging table for clickstream events from silver layer"
+    columns:
+      - name: user_id
+        description: "User who performed the action"
+      - name: event_timestamp
+        description: "When the event occurred"
+      - name: event_type
+        description: "Type of event (page_view, click, etc.)"
+      - name: page_url
+        description: "URL of the page"
+      - name: product_id
+        description: "Product related to the event"
+      - name: session_id
+        description: "Session identifier"
+      - name: loaded_at
+        description: "Timestamp when record was loaded"
