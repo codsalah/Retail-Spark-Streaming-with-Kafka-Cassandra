@@ -5,6 +5,8 @@ venv/
 *.csv
 data/datanode/
 data/namenode/
+data/silver/**/*.crc
+data/silver/**/_SUCCESS
 
 # Logs
 *.log
