@@ -1,0 +1,31 @@
+name: retail_analytics
+version: "1.0.0"
+config-version: 2
+
+# This tells dbt to look for the profile named 'retail_analytics' in profiles.yml
+profile: retail_analytics
+
+# Directories
+model-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+clean-targets: ["target", "dbt_packages"]
+
+# Model configurations
+models:
+  retail_analytics:
+    # Default materialization for all models
+    +materialized: view
+
+    # Staging models (raw data cleaning)
+    staging:
+      +materialized: view
+
+    # Marts (business logic, final tables)
+    marts:
+      +materialized: table
