@@ -43,11 +43,7 @@ services:
       - ./data:/opt/airflow/data
     ports:
       - "8081:8080"
-    command: >
-      bash -c "
-        /opt/airflow/scripts/init_dbt.sh &&
-        airflow webserver
-      "
+    command: webserver
     networks:
       - net
 
@@ -71,11 +67,7 @@ services:
       - ./scripts:/opt/airflow/scripts
       - ./airflow_cfg:/opt/airflow/config
       - ./data:/opt/airflow/data
-    command: >
-      bash -c "
-        /opt/airflow/scripts/init_dbt.sh &&
-        airflow scheduler
-      "
+    command: scheduler
     networks:
       - net
 
@@ -91,7 +83,6 @@ services:
       DBT_PROJECT_DIR: /opt/airflow/dbt
     entrypoint: >
       bash -c "
-        /opt/airflow/scripts/init_dbt.sh &&
         airflow db upgrade &&
         airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com
       "
@@ -227,6 +218,35 @@ services:
     ports:
       - "50075:50075"
       - "50010:50010"
+    networks:
+      - net
+
+  # Apache Superset
+  superset:
+    image: apache/superset
+    depends_on:
+      - postgres
+    ports:
+      - "8088:8088"
+    volumes:
+      - ./data/gold:/app/gold_data
+    environment:
+      SUPERSET_SECRET_KEY: 'your-secret-key-here'
+      SQLALCHEMY_DATABASE_URI: postgresql://airflow:airflow@postgres/superset
+    networks:
+      - net
+
+  # Superset Initialization
+  superset-init:
+    image: apache/superset
+    depends_on:
+      - superset
+    environment:
+      SUPERSET_SECRET_KEY: 'your-secret-key-here'
+    command: >
+      bash -c "superset fab create-admin --username admin --firstname Superset --lastname Admin --email admin@superset.com --password admin &&
+               superset db upgrade &&
+               superset init"
     networks:
       - net
 
