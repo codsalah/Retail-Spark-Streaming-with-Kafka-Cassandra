@@ -43,7 +43,8 @@ Streaming    Ingestion    Storage          Validation                Aggregation
 - **Processing**: Real-time streaming with 30-second micro-batches
 ![alt text](Imgs/image-1.png)
 ![alt text](Imgs/image.png)
-
+#### PowerBI Bronze Visualization
+![alt text](Imgs/PowerBI1.png)
 ### Silver Layer (Data Cleaning and Validation)
 - **Purpose**: Clean, validate, and standardize data for analytics
 - **Technologies**: Spark, Cassandra, HDFS
