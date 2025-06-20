@@ -6,18 +6,6 @@ This directory contains Airflow DAGs for orchestrating the retail analytics data
 
 ### Core Pipeline DAGs
 
-**`bronze_ingest_to_hdfs.py`**
-- Handles three datasets: clickstream, purchases, and customers.
-- Appends data to HDFS if file exists, else creates and copies it.
-- Requires proper mounting of local files and HDFS access in Airflow.
-
-**`dbt_transformation_dag`**
-- Automates DBT transformations on silver-layer data to produce gold-layer analytics tables.  
-- Validates input data availability and performs quality checks post-transformation.  
-- Scheduled to run every 2 minutes for fast testing and feedback loops.  
-- Includes a summary report generation after successful DBT execution.
-
-
 **`csv_to_silver_pipeline.py`** - CSV to Silver layer processing
 - Cleans and validates raw CSV data using Spark
 - Applies data quality checks and transformations
@@ -44,14 +32,6 @@ This directory contains Airflow DAGs for orchestrating the retail analytics data
 - Creates dimension and fact tables
 - Generates aggregated analytics
 
-**`silver_data_monitor.py`** - Data quality monitoring
-- Monitors silver layer data freshness and quality
-- Generates data quality reports
-- Schedule: Every 6 hours
-
-**`retail_pipeline.py`** - Legacy pipeline (deprecated)
-- Original pipeline implementation
-- Kept for reference
 
 ### Utilities
 
