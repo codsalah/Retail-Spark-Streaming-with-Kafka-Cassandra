@@ -107,7 +107,7 @@ customer_bronze = customer_df.writeStream \
     .format("parquet") \
     .option("path", "hdfs://namenode:8020/bronze/customers") \
     .option("checkpointLocation", "hdfs://namenode:8020/checkpoints/customers_bronze") \
-    .trigger(processingTime="4 minutes") \
+    .trigger(processingTime="30 seconds") \
     .start()
 
 # Writing to Cassandra Real-time Layer
@@ -133,7 +133,34 @@ customer_cassandra = customer_df.writeStream \
     .start()
 
 # ------------------- Silver Layer Processing -------------------
-# ------------------- To be implemented ------------------------- 
+# Transform data from Bronze layer and write to Silver layer
+
+# Clickstream Silver Layer
+clickstream_silver = clickstream_df.filter(col("event_type").isNotNull()) \
+    .writeStream \
+    .format("parquet") \
+    .option("path", "hdfs://namenode:8020/silver/clickstream") \
+    .option("checkpointLocation", "hdfs://namenode:8020/checkpoints/clickstream_silver") \
+    .trigger(processingTime="4 minutes") \
+    .start()
+
+# Purchases Silver Layer
+purchase_silver = purchase_df.filter(col("quantity") > 0) \
+    .writeStream \
+    .format("parquet") \
+    .option("path", "hdfs://namenode:8020/silver/purchases") \
+    .option("checkpointLocation", "hdfs://namenode:8020/checkpoints/purchases_silver") \
+    .trigger(processingTime="30 seconds") \
+    .start()
+
+# Customers Silver Layer
+customer_silver = customer_df.filter(col("email").isNotNull()) \
+    .writeStream \
+    .format("parquet") \
+    .option("path", "hdfs://namenode:8020/silver/customers") \
+    .option("checkpointLocation", "hdfs://namenode:8020/checkpoints/customers_silver") \
+    .trigger(processingTime="30 seconds") \
+    .start()
 
 # Wait for the streaming queries to terminate
 spark.streams.awaitAnyTermination()
